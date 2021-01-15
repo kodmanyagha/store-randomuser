@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\Picture;
 use App\Models\RandomUser;
 use App\Models\Street;
+use App\Models\Timezone;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
@@ -19,14 +20,16 @@ class FetchRandomUser implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $runAgain;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($runAgain = true)
     {
-        //
+        $this->runAgain = $runAgain;
     }
 
     /**
@@ -36,10 +39,14 @@ class FetchRandomUser implements ShouldQueue
      */
     public function handle()
     {
-        echo "job called" . PHP_EOL;
+        $client   = new Client();
+        $response = $client->get('https://randomuser.me/api/');
 
-        $client         = new Client();
-        $response       = $client->get('https://randomuser.me/api/');
+        if ($response->getStatusCode() !== 200) {
+            if ($this->runAgain) FetchRandomUser::dispatch(false)->delay(now()->addMinutes(15));
+            return;
+        }
+
         $randomUserJson = json_decode($response->getBody())->results[0];
         //if (env('APP_DEBUG')) print_r($randomUserJson);
 
@@ -86,6 +93,12 @@ class FetchRandomUser implements ShouldQueue
         $picture->medium         = $randomUserJson->picture->medium;
         $picture->thumbnail      = $randomUserJson->picture->thumbnail;
         $picture->save();
+
+        $timezone              = new Timezone();
+        $timezone->location_id = $location->id;
+        $timezone->offset      = $randomUserJson->location->timezone->offset;
+        $timezone->description = $randomUserJson->location->timezone->description;
+        $timezone->save();
     }
 
     protected function tzConvert($tz)

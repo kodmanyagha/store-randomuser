@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string city
  * @property string state
  * @property string country
- * @property int postcode
+ * @property string postcode
  * @property double latitude
  * @property double longitude
  */

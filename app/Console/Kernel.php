@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command('randomuser:fetch')->cron('* * * * *');
+        $cron = '15,45 * * * *';
+        $schedule->command('randomuser:fetch')->cron($cron);
     }
 
     /**
