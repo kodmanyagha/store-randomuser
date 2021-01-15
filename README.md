@@ -13,8 +13,8 @@ php artisan schedule:work    # terminal 2
 
 You need redis server and php-redis extension for using queue.
 
+Example screenshot:
 
-
-
+![](https://image.nixarsoft.com/di/R4JQ/Screen_Shot_2021-01-15_at_17.png)
 
 

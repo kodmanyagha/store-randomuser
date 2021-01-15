@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\Location;
+use App\Models\Picture;
 use App\Models\RandomUser;
+use App\Models\Street;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
@@ -39,8 +41,7 @@ class FetchRandomUser implements ShouldQueue
         $client         = new Client();
         $response       = $client->get('https://randomuser.me/api/');
         $randomUserJson = json_decode($response->getBody())->results[0];
-
-        if (env('APP_DEBUG')) print_r($randomUserJson);
+        //if (env('APP_DEBUG')) print_r($randomUserJson);
 
         $user            = new User();
         $user->uuid      = $randomUserJson->login->uuid;
@@ -72,6 +73,19 @@ class FetchRandomUser implements ShouldQueue
         $location->latitude       = $randomUserJson->location->coordinates->latitude;
         $location->longitude      = $randomUserJson->location->coordinates->longitude;
         $location->save();
+
+        $street              = new Street();
+        $street->location_id = $location->id;
+        $street->number      = $randomUserJson->location->street->number;
+        $street->name        = $randomUserJson->location->street->name;
+        $street->save();
+
+        $picture                 = new Picture();
+        $picture->random_user_id = $randomUser->id;
+        $picture->large          = $randomUserJson->picture->large;
+        $picture->medium         = $randomUserJson->picture->medium;
+        $picture->thumbnail      = $randomUserJson->picture->thumbnail;
+        $picture->save();
     }
 
     protected function tzConvert($tz)
