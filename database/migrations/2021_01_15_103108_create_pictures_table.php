@@ -15,7 +15,14 @@ class CreatePicturesTable extends Migration
     {
         Schema::create('pictures', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('random_user_id');
+            $table->string('large');
+            $table->string('medium');
+            $table->string('thumbnail');
             $table->timestamps();
+
+            // foreign keys
+            $table->foreign('random_user_id')->references('id')->on('random_users');
         });
     }
 

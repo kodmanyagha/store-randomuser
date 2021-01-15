@@ -15,7 +15,14 @@ class CreateTimezonesTable extends Migration
     {
         Schema::create('timezones', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('location_id');
+            $table->string('offset');
+            $table->string('description');
             $table->timestamps();
+
+            // foreign keys
+            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 

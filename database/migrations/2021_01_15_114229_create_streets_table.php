@@ -15,7 +15,15 @@ class CreateStreetsTable extends Migration
     {
         Schema::create('streets', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('location_id');
+            $table->unsignedInteger('number');
+            $table->string('name');
+
             $table->timestamps();
+
+            // foreign keys
+            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 
