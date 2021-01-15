@@ -13,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string firstname
  * @property string lastname
  * @property string email
+ * @property string salt
  * @property string password
  */
 class User extends Authenticatable
@@ -26,6 +27,7 @@ class User extends Authenticatable
         'lastname',
         'username',
         'email',
+        'salt',
         'password',
     ];
 
