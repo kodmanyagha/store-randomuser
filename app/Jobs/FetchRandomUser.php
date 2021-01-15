@@ -39,7 +39,8 @@ class FetchRandomUser implements ShouldQueue
         $client         = new Client();
         $response       = $client->get('https://randomuser.me/api/');
         $randomUserJson = json_decode($response->getBody())->results[0];
-        print_r($randomUserJson);
+
+        if (env('APP_DEBUG')) print_r($randomUserJson);
 
         $user            = new User();
         $user->uuid      = $randomUserJson->login->uuid;

@@ -2,4 +2,19 @@
 
 This is a Laravel 8 project which periodically receiving random user and storing it to database with models.
 
+### Usage
+
+In this project we're using Queue and Schedule features. For this you need two different terminals and you must execute these commands in each terminal:
+
+```
+php artisan queue:work       # terminal 1
+php artisan schedule:work    # terminal 2
+```
+
+You need redis server and php-redis extension for using queue.
+
+
+
+
+
 
